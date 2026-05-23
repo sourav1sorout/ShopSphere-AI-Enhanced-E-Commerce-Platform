@@ -55,17 +55,34 @@ const PORT = process.env.PORT || 5000;
 const seedProducts = require('./seedProductsV2');
 const startServer = async () => {
   try {
-    // Ensure DB is connected and models are synced before seeding
-    await connectDB();
+  // Ensure DB is connected and models are synced before seeding
+  await connectDB();
 
-    await seedProducts();
-    
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+  await seedProducts();
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+
+} catch (error) {
+  console.error("❌ SQLite Connection Error");
+
+  // Full error object
+  console.error(error);
+
+  // Sequelize validation errors
+  if (error.errors) {
+    error.errors.forEach((err) => {
+      console.error(`Field: ${err.path}`);
+      console.error(`Message: ${err.message}`);
+      console.error(`Value: ${err.value}`);
     });
-  } catch (error) {
-    console.error("❌ SQLite Connection Error:", error);
-    process.exit(1);
+  }
+
+  // Full stack trace
+  console.error(error.stack);
+
+  process.exit(1);
 }
 };
 
