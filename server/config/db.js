@@ -16,7 +16,7 @@ const connectDB = async () => {
     // Sync models (in production, use migrations instead of sync)
     // Need to require models before sync so Sequelize knows about them
     require('../models');
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log('✅ SQLite Database Synced');
   } catch (error) {
   console.error('❌ SQLite Connection Error');
