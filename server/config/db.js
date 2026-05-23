@@ -19,9 +19,20 @@ const connectDB = async () => {
     await sequelize.sync({ alter: true });
     console.log('✅ SQLite Database Synced');
   } catch (error) {
-    console.error(`❌ SQLite Connection Error: ${error.message}`);
-    process.exit(1);
+  console.error('❌ SQLite Connection Error');
+  console.error(error);
+
+  if (error.errors) {
+    error.errors.forEach((err) => {
+      console.error('Field:', err.path);
+      console.error('Message:', err.message);
+      console.error('Value:', err.value);
+    });
   }
+
+  console.error(error.stack);
+  process.exit(1);
+}
 };
 
 module.exports = { sequelize, connectDB };
