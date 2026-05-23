@@ -1,0 +1,133 @@
+/* Product Card */
+.product-card {
+  transition: all 0.3s ease;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+  transform: translateY(-5px);
+}
+
+.product-card img {
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Product Card List */
+.product-card-list {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+}
+
+.product-card-list:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+  transform: translateX(5px);
+}
+
+/* Hover Lift Effect */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+}
+
+/* Button Group */
+.btn-group .btn {
+  border-radius: 8px;
+  margin-right: 4px;
+}
+
+.btn-group .btn.active {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Filter Panel */
+.card {
+  border-radius: 12px;
+  border: none;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Select and Input */
+.form-select, .form-control {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.form-select:focus, .form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Badge */
+.badge {
+  border-radius: 20px;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Pagination */
+.pagination .page-link {
+  border-radius: 8px;
+  margin: 0 2px;
+  transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover:not(.disabled) {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: "/";
+  color: #dee2e6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-card {
+    margin-bottom: 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+}
+
+/* Loading Spinner */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.3em;
+}
+
+/* Text Truncation */
+.text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

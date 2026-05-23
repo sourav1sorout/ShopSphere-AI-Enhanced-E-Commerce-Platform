@@ -1,0 +1,111 @@
+<div class="container py-4">
+  <div class="row">
+    <!-- Profile Info -->
+    <div class="col-md-4 mb-4" *ngIf="user">
+      <div class="card shadow-sm border-0">
+        <div class="card-body text-center p-4">
+          <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+            {{ user.name.charAt(0).toUpperCase() }}
+          </div>
+          <h4 class="fw-bold">{{ user.name }}</h4>
+          <p class="text-muted mb-1">{{ user.email }}</p>
+          <span class="badge bg-secondary mb-3">{{ user.role }}</span>
+          
+          <hr>
+          <div class="text-start mt-3">
+            <h6 class="fw-bold mb-3">Account Details</h6>
+            <p class="mb-1 small text-muted">Member since</p>
+            <p class="fw-semibold">Just now</p> <!-- Simplified for UI -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Checkout / Main Area -->
+    <div class="col-md-8">
+      
+      <!-- Normal Profile Mode -->
+      <div class="card shadow-sm border-0" *ngIf="!isCheckoutMode">
+        <div class="card-body p-4">
+          <h4 class="fw-bold mb-4">Welcome back, {{ user?.name }}</h4>
+          <p class="lead text-muted">Manage your account, view orders, and set up your preferences.</p>
+          
+          <div class="row g-4 mt-2">
+            <div class="col-sm-6">
+              <div class="p-4 bg-light rounded-3 text-center h-100">
+                <i class="bi bi-box-seam fs-1 text-primary mb-2"></i>
+                <h5>My Orders</h5>
+                <p class="small text-muted">Track and view your recent purchases.</p>
+                <a routerLink="/orders" class="btn btn-outline-primary btn-sm">View Orders</a>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="p-4 bg-light rounded-3 text-center h-100">
+                <i class="bi bi-bell fs-1 text-primary mb-2"></i>
+                <h5>Price Alerts</h5>
+                <p class="small text-muted">Manage your price drop alerts.</p>
+                <a routerLink="/profile" class="btn btn-outline-primary btn-sm">View Alerts</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checkout Mode -->
+      <div class="card shadow-sm border-0" *ngIf="isCheckoutMode">
+        <div class="card-body p-4">
+          <h4 class="fw-bold mb-4">Checkout</h4>
+          
+          <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
+          <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+          <form (ngSubmit)="placeOrder()" #checkoutForm="ngForm" *ngIf="!successMessage">
+            <h5 class="fw-semibold mb-3">Shipping Address</h5>
+            <div class="mb-3">
+              <label class="form-label">Street Address</label>
+              <input type="text" class="form-control" name="street" [(ngModel)]="shippingAddress.street" required>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">City</label>
+                <input type="text" class="form-control" name="city" [(ngModel)]="shippingAddress.city" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Postal Code</label>
+                <input type="text" class="form-control" name="postalCode" [(ngModel)]="shippingAddress.postalCode" required>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label">Country</label>
+              <input type="text" class="form-control" name="country" [(ngModel)]="shippingAddress.country" required>
+            </div>
+
+            <hr class="mb-4">
+
+            <h5 class="fw-semibold mb-3">Payment Method</h5>
+            <div class="mb-4">
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="payment" id="payCard" value="card" [(ngModel)]="paymentMethod" checked>
+                <label class="form-check-label" for="payCard">
+                  Credit / Debit Card (Stripe)
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment" id="payCod" value="cod" [(ngModel)]="paymentMethod">
+                <label class="form-check-label" for="payCod">
+                  Cash on Delivery
+                </label>
+              </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold" [disabled]="!checkoutForm.form.valid || loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+              Place Order
+            </button>
+          </form>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>

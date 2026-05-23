@@ -1,0 +1,176 @@
+<div class="container">
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !product" class="text-center py-5">
+    <h3 class="text-muted">Product not found</h3>
+    <a routerLink="/shop" class="btn btn-primary mt-3">Back to Shop</a>
+  </div>
+
+  <div *ngIf="!loading && product" class="row">
+    <!-- Breadcrumb -->
+    <div class="col-12 mb-4">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+          <li class="breadcrumb-item"><a routerLink="/shop">Shop</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+      </nav>
+    </div>
+
+    <!-- Product Image -->
+    <div class="col-md-6 mb-4">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4">
+        <img [src]="selectedImage || product.image" class="img-fluid rounded-3 mb-3" [alt]="product.name" style="max-height: 400px; object-fit: contain;">
+        <!-- Thumbnail gallery -->
+        <div class="row g-2" *ngIf="product.images && product.images.length > 0">
+          <div class="col-3" *ngFor="let img of product.images">
+            <img [src]="img" class="img-thumbnail rounded cursor-pointer" [ngClass]="{ 'border-primary': selectedImage === img }" (click)="selectedImage = img" [alt]="product.name" style="height: 80px; object-fit: contain;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="col-md-6 mb-4">
+      <h2 class="fw-bold mb-2">{{ product.name }}</h2>
+      <div class="text-muted mb-3 small">{{ product.brand }} | {{ product.category }}</div>
+      
+      <div class="d-flex align-items-center mb-4">
+        <div class="me-3">
+          <span *ngIf="product.discountPercentage" class="text-muted text-decoration-line-through">₹{{ product.price }}</span>
+          <div class="fs-3 fw-bold text-primary">₹{{ getDiscountedPrice() | number: '1.0-0' }}</div>
+          <span *ngIf="product.discountPercentage" class="badge bg-danger">Save {{ product.discountPercentage }}%</span>
+        </div>
+        <div class="badge bg-warning text-dark fs-6 px-3 py-2 ms-auto">
+          <i class="bi bi-star-fill me-1"></i> {{ product.ratings }} ({{ product.numReviews }} reviews)
+        </div>
+      </div>
+
+      <p class="lead mb-4">{{ product.description }}</p>
+
+      <!-- Specifications -->
+      <div class="mb-4" *ngIf="product.specifications">
+        <h6 class="fw-bold mb-2">Key Specifications:</h6>
+        <div class="row g-2">
+          <div class="col-6" *ngFor="let spec of (product.specifications | keyvalue)">
+            <div class="small">
+              <span class="text-muted text-capitalize">{{ spec.key }}:</span>
+              <br>
+              <strong>{{ spec.value }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <span class="fw-semibold">Availability: </span>
+        <span class="badge" [ngClass]="product.stock > 0 ? 'bg-success' : 'bg-danger'">
+          {{ product.stock > 0 ? 'In Stock (' + product.stock + ')' : 'Out of Stock' }}
+        </span>
+      </div>
+
+      <!-- Action Area -->
+      <div class="d-flex gap-3 align-items-center mb-4" *ngIf="product.stock > 0">
+        <div class="input-group" style="width: 130px;">
+          <button class="btn btn-outline-secondary" type="button" (click)="quantity = quantity > 1 ? quantity - 1 : 1">-</button>
+          <input type="text" class="form-control text-center fw-bold" [(ngModel)]="quantity" readonly>
+          <button class="btn btn-outline-secondary" type="button" (click)="quantity = quantity < product.stock ? quantity + 1 : product.stock">+</button>
+        </div>
+        <button class="btn btn-primary flex-grow-1 py-3 fw-bold rounded-3" [disabled]="isAdding" (click)="addToCart()">
+          <span *ngIf="isAdding" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          <i class="bi bi-cart-plus me-2" *ngIf="!isAdding"></i>{{ isAdding ? 'Adding...' : 'Add to Cart' }}
+        </button>
+      </div>
+
+      <!-- Unique Feature: Price Alert -->
+      <div class="card bg-light border-0 rounded-3">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1 fw-bold"><i class="bi bi-bell-fill text-warning me-2"></i>Price Drop Alert</h6>
+            <small class="text-muted">Get notified when the price drops!</small>
+          </div>
+          <button class="btn btn-sm btn-outline-primary rounded-2" *ngIf="isLoggedIn" (click)="showPriceAlertModal = true">Set Alert</button>
+          <button class="btn btn-sm btn-outline-secondary rounded-2" *ngIf="!isLoggedIn" routerLink="/login">Login to Set Alert</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Price Alert Modal (Custom implementation without needing bootstrap.js) -->
+<div class="modal d-block bg-dark bg-opacity-50" *ngIf="showPriceAlertModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Set Price Alert for {{ product?.name }}</h5>
+        <button type="button" class="btn-close" (click)="showPriceAlertModal = false"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-success" *ngIf="alertSuccess">{{ alertSuccess }}</div>
+        <div class="alert alert-danger" *ngIf="alertError">{{ alertError }}</div>
+        
+        <p>Current Price: <strong>₹{{ product?.price }}</strong></p>
+        <div class="mb-3">
+          <label class="form-label">Target Price (₹)</label>
+          <input type="number" class="form-control" [(ngModel)]="targetPrice">
+          <div class="form-text">We'll email you when the price drops below this amount.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showPriceAlertModal = false">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="setPriceAlert()">Save Alert</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Related Products Section -->
+<div class="container mt-5 mb-5" *ngIf="!loading && product">
+  <div class="row">
+    <div class="col-12">
+      <h3 class="fw-bold mb-4"><i class="bi bi-link-45deg me-2"></i>Related Products</h3>
+    </div>
+  </div>
+
+  <div *ngIf="relatedLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" *ngIf="!relatedLoading && relatedProducts.length > 0">
+    <div class="col" *ngFor="let product of relatedProducts">
+      <div class="card h-100 shadow-sm border-0 product-card overflow-hidden hover-lift rounded-4">
+        <div class="position-relative bg-light" style="height: 200px;">
+          <img [src]="product.image" class="card-img-top p-3" alt="{{ product.name }}" style="height: 100%; object-fit: contain;">
+          <div class="position-absolute top-0 end-0 p-2" *ngIf="product.discountPercentage">
+            <span class="badge bg-danger rounded-pill">-{{ product.discountPercentage }}%</span>
+          </div>
+        </div>
+        <div class="card-body d-flex flex-column">
+          <div class="text-muted small mb-1 text-uppercase fw-semibold">{{ product.category }}</div>
+          <h5 class="card-title text-truncate" [title]="product.name">{{ product.name }}</h5>
+          <p class="text-muted small mb-2">{{ product.brand }}</p>
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span *ngIf="product.discountPercentage" class="text-muted small text-decoration-line-through">₹{{ product.price }}</span>
+            <span class="fs-5 fw-bold text-primary">₹{{ (product.price * (1 - (product.discountPercentage || 0) / 100)) | number: '1.0-0' }}</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="small"><i class="bi bi-star-fill text-warning me-1"></i>{{ product.ratings }} ({{ product.numReviews }})</span>
+            <span class="badge bg-success" *ngIf="product.stock > 0">In Stock</span>
+          </div>
+          <a [routerLink]="['/product', product.id || product._id]" class="btn btn-outline-primary mt-auto w-100 btn-sm rounded-2">View Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!relatedLoading && relatedProducts.length === 0" class="text-center py-5">
+    <p class="text-muted">No related products found</p>
+  </div>
+</div>

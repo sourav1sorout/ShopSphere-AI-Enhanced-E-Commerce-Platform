@@ -1,0 +1,66 @@
+<div class="container py-4">
+  <div class="row mb-4">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/profile">Profile</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Orders</li>
+        </ol>
+      </nav>
+      <h2 class="fw-bold">Order History</h2>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading && error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && orders.length === 0" class="text-center py-5 bg-white rounded shadow-sm">
+    <i class="bi bi-box-seam text-muted" style="font-size: 4rem;"></i>
+    <h3 class="mt-3">No orders found</h3>
+    <p class="text-muted mb-4">You haven't placed any orders yet.</p>
+    <a routerLink="/shop" class="btn btn-primary">Start Shopping</a>
+  </div>
+
+  <div class="row" *ngIf="!loading && orders.length > 0">
+    <div class="col-12">
+      <div class="card shadow-sm border-0 mb-4" *ngFor="let order of orders">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center py-3">
+          <div>
+            <span class="text-muted small me-3">Order Placed: <strong class="text-dark">{{ order.createdAt | date:'mediumDate' }}</strong></span>
+            <span class="text-muted small">Total: <strong class="text-dark">₹{{ order.totalPrice }}</strong></span>
+          </div>
+          <div>
+            <span class="badge" 
+              [ngClass]="{
+                'bg-warning text-dark': order.status === 'Processing',
+                'bg-info text-dark': order.status === 'Shipped',
+                'bg-success': order.status === 'Delivered',
+                'bg-danger': order.status === 'Cancelled'
+              }">
+              {{ order.status }}
+            </span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row align-items-center mb-3" *ngFor="let item of order.orderItems">
+            <div class="col-md-2 col-3">
+              <img [src]="item.product?.image || 'placeholder.png'" class="img-fluid rounded" alt="...">
+            </div>
+            <div class="col-md-6 col-9">
+              <h6 class="fw-bold mb-1"><a [routerLink]="['/product', item.product?._id]" class="text-decoration-none text-dark">{{ item.product?.name || 'Unknown Product' }}</a></h6>
+              <div class="text-muted small">Qty: {{ item.quantity }} | ₹{{ item.price }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-white text-end py-3">
+          <button class="btn btn-outline-primary btn-sm">View Invoice</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,198 @@
+/* Hero Banner */
+.hero-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="20" fill="%23ffffff" opacity="0.05"/><circle cx="80" cy="80" r="30" fill="%23ffffff" opacity="0.1"/></svg>');
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.animate-fade {
+  animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Product Card */
+.product-card {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.product-card:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+  transform: translateY(-5px);
+}
+
+.product-card img {
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Category Button */
+.category-btn {
+  background-color: #f8f9fa;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: #0d6efd;
+}
+
+.category-btn:hover {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+  transform: translateX(5px);
+}
+
+/* Hover Effects */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Badge Animations */
+.badge {
+  animation: slideInLeft 0.4s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Section Headers */
+h2 {
+  position: relative;
+  margin-bottom: 1rem !important;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+}
+
+/* Grid Animations */
+.row > [class^='col'] {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button Enhancements */
+.btn {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Price Styling */
+.price-original {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.price-discounted {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #dc3545;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  h2::after {
+    width: 40px;
+  }
+  
+  .hero-banner {
+    padding: 1rem !important;
+  }
+}
+
+/* Loading State */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Star Rating */
+.rating {
+  color: #ffc107;
+  margin-right: 0.5rem;
+}
+
+/* Stock Badge */
+.badge-success {
+  background-color: #198754 !important;
+}
+
+.badge-warning {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.badge-danger {
+  background-color: #dc3545 !important;
+}
+
+.badge-info {
+  background-color: #0dcaf0 !important;
+}
+
+/* Smooth Transitions */
+* {
+  transition-duration: 0.2s;
+}

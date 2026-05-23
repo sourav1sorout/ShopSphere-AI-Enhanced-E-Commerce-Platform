@@ -1,0 +1,45 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow border-0 rounded-4">
+        <div class="card-body p-5">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold text-primary"><i class="bi bi-shop me-2"></i>ShopSphere</h2>
+            <p class="text-muted">Welcome back! Please login to your account.</p>
+          </div>
+
+          <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+          <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Email address</label>
+              <input type="email" class="form-control form-control-lg" name="email" [(ngModel)]="credentials.email" required email placeholder="name@example.com">
+            </div>
+            
+            <div class="mb-4">
+              <div class="d-flex justify-content-between">
+                <label class="form-label fw-semibold">Password</label>
+                <a href="#" class="text-decoration-none small" (click)="$event.preventDefault()">Forgot password?</a>
+              </div>
+              <input type="password" class="form-control form-control-lg" name="password" [(ngModel)]="credentials.password" required placeholder="Enter password">
+            </div>
+            
+            <div class="mb-4 form-check">
+              <input type="checkbox" class="form-check-input" id="rememberMe">
+              <label class="form-check-label" for="rememberMe">Remember me</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold" [disabled]="!loginForm.form.valid || loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Login
+            </button>
+          </form>
+
+          <div class="text-center mt-4">
+            <p class="mb-0 text-muted">Don't have an account? <a routerLink="/register" class="fw-bold text-decoration-none">Sign up</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
